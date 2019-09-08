@@ -1,6 +1,9 @@
+# API de Notas
+Pequeño proyecto en **Slim Framework 4** para app de notas en **Angular**.
+
 ### Instalación Rápida
 
-#### Instala Composer
+#### Instala las dependencias
 ```
 composer install
 ```
