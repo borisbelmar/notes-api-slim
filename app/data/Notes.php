@@ -24,7 +24,7 @@ class Notes {
         try {
             $db = new Database();
             $dbconnection = $db->connect();
-            $stmt = $dbconnection->prepare("SELECT note_name, note_body, created_at, updated_at FROM notes");
+            $stmt = $dbconnection->prepare("SELECT note_id, note_name, note_body, created_at, updated_at FROM notes");
             $stmt->execute();
             $rows = $stmt->fetchAll();
             $stmt = null;
@@ -40,7 +40,7 @@ class Notes {
         try {
             $db = new Database();
             $dbconnection = $db->connect();
-            $stmt = $dbconnection->prepare("SELECT note_name, note_body, created_at, updated_at FROM notes WHERE note_id = :id");
+            $stmt = $dbconnection->prepare("SELECT note_id, note_name, note_body, created_at, updated_at FROM notes WHERE note_id = :id");
             $stmt->execute(
                 [':id'=>$id]
             );
