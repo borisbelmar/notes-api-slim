@@ -8,7 +8,11 @@ $app->group('/notes', function (RouteCollectorProxy $group) {
     $group->get('[/]', function ($req, $res, $params) {
         $payload = json_encode(Notes::get_all());
         $res->getBody()->write($payload);
-        return $res->withHeader('Content-Type', 'application/json');
+        return $res
+            ->withHeader('Content-Type', 'application/json')
+            ->withHeader('Access-Control-Allow-Origin', 'http://localhost:4200')
+            ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     });
 
     $group->post('[/]', function ($req, $res, $params) {
