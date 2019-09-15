@@ -3,15 +3,20 @@ require_once('Database.php');
 
 class Notes {
 
-    static function create($name, $body) {
+    static function create($note_name, $note_body) {
         try {
             $db = new Database();
             $dbconnection = $db->connect();
             $stmt = $dbconnection->prepare(
                 "INSERT INTO notes(note_user, note_name, note_body) VALUES
-                (1, '".$name."', '".$body."')"
+                (1, :note_name, :note_body)"
             );
-            $stmt->execute();
+            $stmt->execute(
+                [
+                    ':note_name'=>$note_name, 
+                    ':note_body'=>$note_body
+                ]
+            );
             return $dbconnection->lastInsertId();
         } catch(PDOException $e) {
             echo "Error al insertar<br>";
@@ -36,13 +41,13 @@ class Notes {
         }
     }
 
-    static function get_by_id($id) {
+    static function get_by_id($note_id) {
         try {
             $db = new Database();
             $dbconnection = $db->connect();
-            $stmt = $dbconnection->prepare("SELECT note_id, note_name, note_body, created_at, updated_at FROM notes WHERE note_id = :id");
+            $stmt = $dbconnection->prepare("SELECT note_id, note_name, note_body, created_at, updated_at FROM notes WHERE note_id = :note_id");
             $stmt->execute(
-                [':id'=>$id]
+                [':note_id'=>$note_id]
             );
             $rows = $stmt->fetchAll();
             $stmt = null;
@@ -54,21 +59,25 @@ class Notes {
         }
     }
 
-    static function update_by_id($id, $name, $body) {
+    static function update_by_id($note_id, $note_name, $note_body) {
         try {
             $db = new Database();
             $dbconnection = $db->connect();
             $stmt = $dbconnection->prepare(
                 "UPDATE notes SET 
-                note_name = :n_name, 
-                note_body = :n_body
-                WHERE note_id = :id"
+                note_name = :note_name, 
+                note_body = :note_body
+                WHERE note_id = :note_id"
             );
             $stmt->execute(
-                array(':n_name'=>$name, ':n_body'=>$body, ':id'=>$id)
+                [
+                    ':note_name'=>$note_name, 
+                    ':note_body'=>$note_body, 
+                    ':note_id'=>$note_id
+                ]
             );
             $stmt->execute();
-            return $id;
+            return $note_id;
         } catch(PDOException $e) {
             echo "Error al actualizar<br>";
             echo $e->getMessage();
@@ -76,18 +85,18 @@ class Notes {
         }
     }
 
-    static function delete_by_id($id) {
+    static function delete_by_id($note_id) {
         try {
             $db = new Database();
             $dbconnection = $db->connect();
             $stmt = $dbconnection->prepare(
-                "DELETE FROM notes WHERE note_id = :id"
+                "DELETE FROM notes WHERE note_id = :note_id"
             );
             $stmt->execute(
-                [':id'=>$id]
+                [':note_id'=>$note_id]
             );
             $stmt->execute();
-            return $id;
+            return $note_id;
         } catch(PDOException $e) {
             echo "Error al actualizar<br>";
             echo $e->getMessage();
